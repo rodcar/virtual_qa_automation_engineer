@@ -1,16 +1,34 @@
 # Virtual QA Automation Engineer
 
+## Table of Contents
+
+- [Usage](#usage)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Using the UI](#using-the-ui)
+- [Architecture](#architecture)
+- [Cypress Testing](#cypress-testing)
+  - [Output Folder](#output-folder)
+  - [Cypress Configuration](#cypress-configuration)
+  - [Running Cypress Tests](#running-cypress-tests)
+- [Eval](#eval)
+- [License](#license)
+
 This example demonstrates a virtual QA automation engineer that analyzes web pages, generates test plans, and creates test automation code.
 
 ## Usage
 
-This tutorial assumes that the project folder is inside the "examples" folder from [NVIDIA/AIQToolkit](https://github.com/NVIDIA/AIQToolkit).
+**This tutorial assumes that the project folder is inside the "examples" folder from [NVIDIA/AIQToolkit](https://github.com/NVIDIA/AIQToolkit).**
 
 To run the virtual QA automation engineer, include the URL in your request:
 
 ```bash
 # Set your OpenAI API key first
 export OPENAI_API_KEY=your_openai_api_key
+
+# Install the package
+uv pip install -e examples/virtual_qa_automation_engineer
 
 # Then run the QA automation engineer
 aiq run --config_file=examples/virtual_qa_automation_engineer/configs/workflow.yaml --input "Generate a test plan for https://rodcar.github.io/girl-factor/"
@@ -66,6 +84,9 @@ npm run dev
 ```bash
 # Set your OpenAI API key first
 export OPENAI_API_KEY=your_openai_api_key
+
+# Install the package
+uv pip install -e examples/virtual_qa_automation_engineer
 
 # In a separate terminal
 aiq serve --config_file examples/virtual_qa_automation_engineer/configs/workflow.yaml
