@@ -1,0 +1,16 @@
+.DS_Store
+.venv
+.vscode
+.idea
+.pytest_cache
+.pytest_cache
+__pycache__/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+src/navigator.egg-info/PKG-INFO
+src/navigator.egg-info/SOURCES.txt
+src/navigator.egg-info/*.*
+output/

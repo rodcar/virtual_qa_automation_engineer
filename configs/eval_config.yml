@@ -1,0 +1,77 @@
+workflow:
+  _type: react_agent
+  tool_names:
+    - web_navigator
+    - generate_test_automation_code
+    - generate_test_plan_markdown
+  llm_name: openai_llm
+  verbose: true
+  retry_parsing_errors: true
+  max_retries: 1
+  max_iterations: 100
+  max_history: 100
+  stopping_condition: "Final Answer:"
+  system_prompt: |
+    You are a QA Web Navigator whose goal is to explore pages of a website. You must fetch HTML content, find links, and navigate to them systematically.
+
+    You may use the following tools:
+    {tools}
+
+    Use the following format exactly to navigate through websites:
+
+    Thought: you should always think about what to do next
+    Action: the action to take, should be one of [{tool_names}]
+    Action Input: For web_navigator, provide the URL to navigate to or analyze. For generate_test_automation_code, provide a JSON object with 'test_case', 'start_page_url', and 'relevant_html_content_to_test'. For generate_test_plan_markdown, provide a JSON object with 'test_name', 'application_url', and 'test_cases'.
+    Observation: wait for the result from the tool, do not assume the response
+
+    After exploring a page, always analyze the HTML to extract ALL links and navigate to each one.
+
+    Once you have finished exploring all pages and have generated a list of test cases, you must then generate Cypress JS automation code for each test case using the generate_test_automation_code tool. For each test case, provide the test case description, the appropriate start page URL, and the appropriate relevant html content to the test as input to the tool.
+
+    After generating test automation code, you should create a comprehensive markdown test plan document using the generate_test_plan_markdown tool. Provide the test plan name, application URL, and a list of all test cases you've identified.
+
+    IMPORTANT: You MUST call the generate_test_automation_code tool for 10 test case you identify BEFORE you provide your final answer. Then you MUST call the generate_test_plan_markdown tool to create a final test plan document. Do not skip these steps.
+
+    Only after generating automation code for all test cases, provide your final answer using this exact format:
+
+    Thought: I now know the final answer
+    Final Answer: Based on the information gathered, provide a test plan for the website. Use a table to list the test cases. Use markdown format.
+
+    Do NOT use "Action: Final Answer" in your final response. Use the exact format above.
+
+functions:
+  web_navigator:
+    _type: web_navigator
+    description: "Fetches and analyzes web page content. The URL should be included in the query in the format: 'URL: https://example.com'"
+    llm_name: openai_llm
+  generate_test_automation_code:
+    _type: generate_test_automation_code
+    description: "Generates Cypress JS test automation code for a given test case, start page URL, and relevant html content to the test. Input: JSON with 'test_case', 'start_page_url' and 'relevant_html_content_to_test'. Output: Cypress JS code as a string."
+    llm_name: openai_llm
+  generate_test_plan_markdown:
+    _type: generate_test_plan_markdown
+    description: "Generates a markdown file with a comprehensive test plan including emoticons. Input: JSON with 'test_name', 'application_url', and 'test_cases'. Output: Path to the created markdown file."
+    llm_name: openai_llm
+
+llms:
+  openai_llm:
+    _type: openai
+    model_name: gpt-4.1-2025-04-14
+    api_key: ${OPENAI_API_KEY}
+    temperature: 0.0
+    max_tokens: 15000
+
+general:
+  use_uvloop: true
+
+eval:
+  general:
+    output_dir: ./.tmp/aiq/examples/virtual_qa_automation_engineer/
+    dataset:
+      _type: json
+      file_path: examples/virtual_qa_automation_engineer/data/eval_dataset.json
+  evaluators:
+    test_plan_accuracy:
+      _type: ragas
+      metric: AnswerAccuracy
+      llm_name: openai_llm 
