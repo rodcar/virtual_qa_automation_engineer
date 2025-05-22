@@ -48,6 +48,8 @@ pip install -e .
 
 The AIQ Toolkit provides a user interface that makes it easier to interact with the virtual QA automation engineer.
 
+> **Note:** The UI is located in the `external/aiqtoolkit-opensource-ui` directory. Make sure to run the UI commands from this directory.
+
 1. Install the required dependencies:
 ```bash
 # In the AIQ Toolkit root directory
