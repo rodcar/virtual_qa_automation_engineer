@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-- [Usage](#usage)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Usage (CLI)](#usage)
 - [Using the UI](#using-the-ui)
 - [Architecture](#architecture)
 - [Cypress Testing](#cypress-testing)
@@ -16,23 +16,6 @@
 - [License](#license)
 
 This example demonstrates a virtual QA automation engineer that analyzes web pages, generates test plans, and creates test automation code.
-
-## Usage
-
-**This tutorial assumes that the project folder is inside the "examples" folder from [NVIDIA/AIQToolkit](https://github.com/NVIDIA/AIQToolkit).**
-
-To run the virtual QA automation engineer, include the URL in your request:
-
-```bash
-# Set your OpenAI API key first
-export OPENAI_API_KEY=your_openai_api_key
-
-# Install the package
-uv pip install -e examples/virtual_qa_automation_engineer
-
-# Then run the QA automation engineer
-aiq run --config_file=examples/virtual_qa_automation_engineer/configs/workflow.yaml --input "Generate a test plan for https://rodcar.github.io/girl-factor/"
-```
 
 ## Features
 
@@ -51,15 +34,46 @@ aiq run --config_file=examples/virtual_qa_automation_engineer/configs/workflow.y
 
 ## Installation
 
-1. Create a virtual environment:
+1. Clone the [NVIDIA/AIQToolkit](https://github.com/NVIDIA/AIQToolkit) repository.
+```bash
+git clone https://github.com/NVIDIA/AIQToolkit.git
+```
+
+2. Navigate to the `AIQToolkit/examples` folder and clone this repository
+```bash
+cd AIQToolkit/examples
+
+git clone https://github.com/rodcar/virtual_qa_automation_engineer.git
+
+# Navigate to the project's folder
+cd virtual_qa_automation_engineer/
+```
+
+3. Create a virtual environment:
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # On Windows, use .venv\Scripts\activate
 ```
 
-2. Install dependencies:
+4. Install dependencies:
 ```bash
 pip install -e .
+```
+
+From here you can choose to run the agent using the terminal or the UI.
+
+## Usage (CLI)
+
+**This tutorial assumes that the project folder is inside the "examples" folder from [NVIDIA/AIQToolkit](https://github.com/NVIDIA/AIQToolkit).**
+
+To run the virtual QA automation engineer, include the URL in your request:
+
+```bash
+# Set your OpenAI API key first
+export OPENAI_API_KEY=your_openai_api_key
+
+# Then run the QA automation engineer
+aiq run --config_file=configs/workflow.yaml --input "Generate a test plan for https://rodcar.github.io/girl-factor/"
 ```
 
 ## Using the UI
@@ -67,6 +81,8 @@ pip install -e .
 The AIQ Toolkit provides a user interface that makes it easier to interact with the virtual QA automation engineer.
 
 > **Note:** The UI is located in the `external/aiqtoolkit-opensource-ui` directory. Make sure to run the UI commands from this directory.
+
+In a new terminal:
 
 1. Install the required dependencies:
 ```bash
@@ -79,16 +95,13 @@ npm install
 # In the aiqtoolkit-opensource-ui directory
 npm run dev
 ```
-   
-3. Start the AIQ server:
+
+3. In a new terminal: Start the AIQ server:
 ```bash
 # Set your OpenAI API key first
 export OPENAI_API_KEY=your_openai_api_key
 
-# Install the package
-uv pip install -e examples/virtual_qa_automation_engineer
-
-# In a separate terminal
+# In a separate terminal, from the AIQToolkit folder
 aiq serve --config_file examples/virtual_qa_automation_engineer/configs/workflow.yaml
 ```
 
@@ -98,6 +111,7 @@ aiq serve --config_file examples/virtual_qa_automation_engineer/configs/workflow
    - Set the HTTP API endpoint (typically http://localhost:8000)
 
 6. Enter your test request with a URL to start generating test plans and automation code
+"Generate a test plan for https://rodcar.github.io/girl-factor/"
 
 ## Architecture
 
