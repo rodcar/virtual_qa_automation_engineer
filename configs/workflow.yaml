@@ -1,15 +1,16 @@
 general:
   use_uvloop: true
-  telemetry:
-    logging:
-      console:
-        _type: console
-        level: WARN
-    tracing:
-      phoenix:
-        _type: phoenix
-        endpoint: http://localhost:6006/v1/traces
-        project: virtual_qa_automation_engineer
+# Uncomment to enable telemetry
+#   telemetry:
+#     logging:
+#       console:
+#         _type: console
+#         level: WARN
+#     tracing:
+#       phoenix:
+#         _type: phoenix
+#         endpoint: http://localhost:6006/v1/traces
+#         project: virtual_qa_automation_engineer
 
 functions:
    web_navigator:
