@@ -268,30 +268,42 @@ async def generate_test_plan_markdown_tool(config: GenerateTestPlanMarkdownConfi
 
     async def generate_test_plan_markdown(query: str) -> str:
         try:
-            # Parse input JSON
+            # Robust input parsing
+            data = None
             if isinstance(query, str):
                 try:
-                    data = json.loads(query.replace("'", '"'))
-                    # If 'query' is present, parse its value as JSON
-                    if 'query' in data:
-                        inner_query = data['query']
-                        if isinstance(inner_query, str):
-                            # The inner_query might already be a JSON string with escaped quotes
+                    # First, try to parse the string as JSON
+                    parsed = json.loads(query.replace("'", '"'))
+                    # If 'query' key exists, handle its value
+                    if isinstance(parsed, dict) and 'query' in parsed:
+                        inner_query = parsed['query']
+                        if isinstance(inner_query, dict):
+                            data = inner_query
+                        elif isinstance(inner_query, str):
                             try:
-                                # First try normal JSON parsing
-                                parsed_data = json.loads(inner_query)
-                                data = parsed_data
-                            except json.JSONDecodeError:
-                                # If that fails, try handling escaped JSON
-                                data = json.loads(inner_query.replace("'", '"').replace('\\"', '"'))
-                    test_name = data.get("test_name", "Untitled Test Plan")
-                    application_url = data.get("application_url", "")
-                    test_cases = data.get("test_cases", [])
+                                data = json.loads(inner_query.replace("'", '"'))
+                            except Exception:
+                                # Try to eval as Python dict if JSON fails (last resort)
+                                import ast
+                                data = ast.literal_eval(inner_query)
+                        else:
+                            data = parsed
+                    else:
+                        data = parsed
                 except Exception as parse_error:
                     logger.error(f"JSON parsing error: {str(parse_error)}")
-                    return json.dumps({"error": "Input must be a JSON string with 'test_name', 'application_url', and 'test_cases' fields, or a 'query' key containing such a JSON string."})
+                    return json.dumps({"error": "Input must be a JSON string with 'test_name', 'application_url', and 'test_cases' fields, or a 'query' key containing such a JSON object."})
+            elif isinstance(query, dict):
+                data = query
             else:
-                return json.dumps({"error": "Input must be a JSON string."})
+                return json.dumps({"error": "Input must be a JSON string or dict."})
+
+            if not isinstance(data, dict):
+                return json.dumps({"error": "Parsed input is not a dictionary."})
+
+            test_name = data.get("test_name", "Untitled Test Plan")
+            application_url = data.get("application_url", "")
+            test_cases = data.get("test_cases", [])
 
             if not test_cases:
                 return json.dumps({"error": "At least one test case must be provided."})
