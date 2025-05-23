@@ -11,7 +11,9 @@ dynamic = ["version"]
 dependencies = [
   "aiqtoolkit[langchain]~=1.1",
   "httpx>=0.24",
-  "pydantic>=2.0"
+  "pydantic>=2.0",
+  "opentelemetry-api",
+  "opentelemetry-sdk"
 ]
 requires-python = ">=3.11,<3.13"
 description = "Simple Navigator Agent example"
