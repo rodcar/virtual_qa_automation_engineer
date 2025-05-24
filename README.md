@@ -14,6 +14,7 @@
   - [Running Cypress Tests](#running-cypress-tests)
 - [Eval](#eval)
 - [License](#license)
+- [Telemetry with Arize Phoenix](#telemetry-with-arize-phoenix)
 
 This example demonstrates a virtual QA automation engineer that analyzes web pages, generates test plans, and creates test automation code.
 
@@ -23,8 +24,8 @@ This example demonstrates a virtual QA automation engineer that analyzes web pag
 - Generates comprehensive test plans for web applications
 - Creates Cypress JS test automation code for identified test cases
 - Generates visually appealing markdown test plans
-- Analyzes web page content, elements, and functionality
-- Navigates through website links to map application flow
+- Can be connected to telemetry systems such as Arize Phoenix for observability and monitoring
+- Has an evaluation workflow configured to assess agent performance
 
 ## Requirements
 
@@ -174,6 +175,53 @@ aiq eval --config_file examples/virtual_qa_automation_engineer/configs/eval_conf
 ```
 
 The evaluation uses the `eval_dataset.json` file located in `virtual_qa_automation_engineer/data/`. This file contains a set of evaluation prompts (such as test plan requests for specific URLs) and their expected answers. The evaluation process compares the agent's generated outputs against these expected answers to assess performance and accuracy.
+
+## Telemetry with Arize Phoenix
+
+You can enable telemetry and observability for your virtual QA automation engineer using [Arize Phoenix](https://github.com/Arize-ai/phoenix). Phoenix provides a powerful UI for monitoring, debugging, and analyzing your LLM and agent workflows.
+
+### Enabling Telemetry
+
+To enable telemetry, you must uncomment the telemetry configuration in your `configs/workflow.yaml` file. Locate the following section and remove the `#` characters to activate telemetry:
+
+```yaml
+general:
+  use_uvloop: true
+  telemetry:
+    logging:
+      console:
+        _type: console
+        level: WARN
+    tracing:
+      phoenix:
+        _type: phoenix
+        endpoint: http://localhost:6006/v1/traces
+        project: virtual_qa_automation_engineer
+```
+
+This will allow your agent to send telemetry data to the Phoenix server.
+
+### Installation
+
+If you haven't already, install Arize Phoenix:
+
+```bash
+pip install arize-phoenix
+```
+
+### Starting the Phoenix Server
+
+To start the Phoenix server, run:
+
+```bash
+phoenix serve
+```
+
+By default, the Phoenix UI will be available at http://localhost:6006.
+
+### Usage
+
+Once Phoenix is running and telemetry is enabled in your config, Phoenix will automatically detect and visualize traces and telemetry from supported LLM and agent frameworks. If your workflow or the AIQ Toolkit is instrumented for OpenInference or Phoenix, telemetry data will appear in the Phoenix dashboard. For more details on integration and advanced usage, see the [Phoenix documentation](https://docs.arize.com/phoenix/).
 
 ## License
 
