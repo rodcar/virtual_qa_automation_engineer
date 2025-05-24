@@ -13,3 +13,5 @@ __pycache__/
 src/navigator.egg-info/PKG-INFO
 src/navigator.egg-info/SOURCES.txt
 src/navigator.egg-info/*.*
+output/*.md
+output/*.js
